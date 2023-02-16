@@ -1,7 +1,5 @@
-
-
-float Kp = 25, Ki=0.5, Kd=10; //change the value of kp ,ki and kd factors randomly and find a set of these value wich works good for your robot
-float error = 0, P = 0, I = 0, D = 0, PID_value = 0; //defining the intial value 0
+float Kp = 25, Ki=0.5, Kd=10;
+float error = 0, P = 0, I = 0, D = 0, PID_value = 0; 
 float previous_error = 0, previous_I = 0;
 
 
@@ -22,7 +20,6 @@ int motorRpwmPin = 9;
 
 
 int initial_motor_speed = 200;
-int turndelay = 200;
 int turnspeed = 230;
 
 
@@ -50,48 +47,47 @@ void loop() {
   // after calibration code ---
   readIRSensors();
   // printing sensor data
-  Serial.print(int(irReadings[0]));
-  Serial.print(" ");
-  Serial.print(int(irReadings[1]));
-  Serial.print(" ");
-  Serial.print(int(irReadings[2]));
-  Serial.print(" ");
-  Serial.print(int(irReadings[3]));
-  Serial.print(" ");
-  Serial.print(int(irReadings[4]));
-  Serial.print(" ");
-  Serial.print(int(irAnalogData[0]));
-  Serial.print(" ");
-  Serial.print(int(irAnalogData[1]));
-  Serial.print(" ");
-  Serial.print(int(irAnalogData[2]));
-  Serial.print(" ");
-  Serial.print(int(irAnalogData[3]));
-  Serial.print(" ");
-  Serial.print(int(irAnalogData[4]));
-  Serial.print(" - ");
+//   Serial.print(int(irReadings[0]));
+//   Serial.print(" ");
+//   Serial.print(int(irReadings[1]));
+//   Serial.print(" ");
+//   Serial.print(int(irReadings[2]));
+//   Serial.print(" ");
+//   Serial.print(int(irReadings[3]));
+//   Serial.print(" ");
+//   Serial.print(int(irReadings[4]));
+//   Serial.print(" ");
+//   Serial.print(int(irAnalogData[0]));
+//   Serial.print(" ");
+//   Serial.print(int(irAnalogData[1]));
+//   Serial.print(" ");
+//   Serial.print(int(irAnalogData[2]));
+//   Serial.print(" ");
+//   Serial.print(int(irAnalogData[3]));
+//   Serial.print(" ");
+//   Serial.print(int(irAnalogData[4]));
+//   Serial.print(" - ");
 
 
 
   if ((irReadings[0] == 1) && (irReadings[4] == 0))
   {
     RightTurn(turnspeed);
-//    delay(turndelay);
   }
   else if ((irReadings[0] == 0) && (irReadings[4] == 1))
   {
     LeftTurn(turnspeed);
-//    delay(turndelay);
+  }
+   else if(irReadings[1]==0 || irReadings[2] == 0 || irReadings[3] ==0  ) {  
+    calculate_error();
+    calculate_pid();
+    motor_control();
   }
   else if((irReadings[0] == 0) && (irReadings[1] == 0) && (irReadings[2] == 0) && (irReadings[3] == 0) && (irReadings[4] == 0))  
   {
     motorStop();
   }
-  else if(irReadings[1]==0 || irReadings[2] == 0 || irReadings[3] ==0  ) {  
-    calculate_error();
-    calculate_pid();
-    motor_control();
-  }
+ 
 }
 
 
@@ -127,7 +123,8 @@ void calculate_error() {
   }
 }
 
-void calculate_pid()//calculating pid
+//calculating pid
+void calculate_pid()
 {
   P = error;
   I = I + error;
@@ -154,7 +151,7 @@ void motor_control()//motor control
   digitalWrite(motorLBackward, LOW);
   digitalWrite(motorRBackward, LOW);
   digitalWrite(motorRForward, HIGH);
-  Serial.println("F -");
+//   Serial.println("F -");
 }
 
 
@@ -163,11 +160,7 @@ void motor_control()//motor control
 void RightTurn(int speed) {
   analogWrite(motorRpwmPin, 0);
   analogWrite(motorLpwmPin, speed);
-//  digitalWrite(motorLForward, HIGH);
-//  digitalWrite(motorLBackward, LOW);
-//  digitalWrite(motorRBackward, HIGH);
-//  digitalWrite(motorRForward, LOW);
-  Serial.println("RT");
+//   Serial.println("RT");
 }
 
 
@@ -175,15 +168,11 @@ void RightTurn(int speed) {
 void LeftTurn(int speed) {
   analogWrite(motorRpwmPin, speed);
   analogWrite(motorLpwmPin, 0);
-//  digitalWrite(motorLForward, LOW);
-//  digitalWrite(motorLBackward, HIGH);
-//  digitalWrite(motorRBackward, LOW);
-//  digitalWrite(motorRForward, HIGH);
-  Serial.println("LT");
+//   Serial.println("LT");
 }
 
 void motorStop() {
   analogWrite(motorRpwmPin, 0);
   analogWrite(motorLpwmPin, 0);
-  Serial.println("S");
+//   Serial.println("S");
 }
